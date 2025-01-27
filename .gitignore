@@ -1,0 +1,61 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+**/bin/
+**/obj/
+**/Debug/
+**/Release/
+**/x64/
+**/x86/
+
+# Packages
+*.nupkg
+**/packages/
+*.snupkg
+
+# Compiled binary folder
+/bin/
+/obj/
+
+# User-specific files
+*.rsuser
+*.userprefs
+
+# Logs
+*.log
+
+# Dependency directories
+node_modules/
+bower_components/
+
+# Generated files
+*.dll
+*.exe
+*.pdb
+*.cache
+*.tmp
+*.csproj.user
+*.pyc
+*.class
+
+# Coverage results
+coverage/
+
+# Publish output
+*.PublishProfiles/
+
+# Others
+**/Thumbs.db
+*.DS_Store
+desktop.ini
+*.bak
+*.swp
