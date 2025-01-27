@@ -29,5 +29,5 @@ public class ProductoDTO
     [Required(ErrorMessage = "El campo Imagen es requerido")]
     public string? Imagen { get; set; }
     public DateTime? FechaCreacion { get; set; }
-    public CategoriaDTO IdCategoriaNavigation { get; set; }
+    public CategoriaDTO? IdCategoriaNavigation { get; set; }
 }
