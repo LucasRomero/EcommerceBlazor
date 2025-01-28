@@ -19,8 +19,4 @@
     <ProjectReference Include="..\Ecommerce.DTO\Ecommerce.DTO.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Extensiones\" />
-  </ItemGroup>
-
 </Project>

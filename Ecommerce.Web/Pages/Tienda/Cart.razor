@@ -5,10 +5,12 @@
 @inject IToastService toastService;
 @inject NavigationManager _navServicio;
 
+@using Microsoft.AspNetCore.Components.Authorization;
+@using System.Security.Claims;
 
 <div class="row mt-4">
 
-@*    INFORMACION DE LOS PRODUCTOS AGREGADOS EN EL CARRITO*@
+    @*    INFORMACION DE LOS PRODUCTOS AGREGADOS EN EL CARRITO*@
 
     <div class="col-sm-8">
         <div class="card mb-3">
@@ -42,11 +44,11 @@
                                             <div class="btn-group" role="group">
                                                 <button type="button" class="btn btn-outline-dark" @onclick="(() =>Disminuir(item.Producto.IdProducto))">
                                                     <i class="oi oi-minus"></i>
-                                                    </button>
+                                                </button>
                                                 <input class="form-control" readonly="readonly" style="width:50px" @bind-value="item.Cantidad" />
                                                 <button type="button" class="btn btn-outline-dark" @onclick="(() =>Aumentar(item.Producto.IdProducto))">
                                                     <i class="oi oi-plus"></i>
-                                                    </button>
+                                                </button>
                                             </div>
                                         </td>
                                         <td valign="middle">@item.Total</td>
@@ -58,30 +60,30 @@
                                     </tr>
                                 }
 
-                                
+
                             }else{
                                 <tr>
                                     <td colspan="6">
                                         <div class="alert alert-warning" role="alert">
-                                           No hay productos en el carrito
+                                            No hay productos en el carrito
                                         </div>
                                     </td>
                                 </tr>
                             }
-                           
+
 
                         </tbody>
                     </table>
                 </div>
 
-                
+
             </div>
 
-         
+
         </div>
     </div>
 
-@*    SE MUESTRA LA INFORMACION DE TARJETA Y OPCION DE PAGAR*@
+    @*    SE MUESTRA LA INFORMACION DE TARJETA Y OPCION DE PAGAR*@
     <div class="col-sm-4">
         <div class="card mb-3">
             <div class="card-body">
@@ -92,25 +94,28 @@
                         <label class="form-label">Nombre Titular</label>
                         <input type="text" class="form-control form-control-sm" placeholder="" @bind-value="tarjeta.Titular" disabled="@disabled">
                         <ValidationMessage For="@(()=>tarjeta.Titular)" />
-                        
+
                     </div>
                     <div class="mb-2">
                         <label  class="form-label">Numero Tarjeta</label>
-                        <input type="text" class="form-control form-control-sm" placeholder="##############" autocomplete="off" @bind-value="tarjeta.Numero" disabled="@disabled">
+                        <input type="text" class="form-control form-control-sm" placeholder="##############" autocomplete="off" 
+                        @bind-value="tarjeta.Numero" disabled="@disabled">
                         <ValidationMessage For="@(()=>tarjeta.Numero)" />
                     </div>
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="mb-2">
                                 <label class="form-label">Vigencia</label>
-                                <input type="text" class="form-control form-control-sm" placeholder="MM/YY" autocomplete="off" @bind-value="tarjeta.Vigencia" disabled="@disabled">
+                                <input type="text" class="form-control form-control-sm" placeholder="MM/YY" autocomplete="off" 
+                                @bind-value="tarjeta.Vigencia" disabled="@disabled">
                                 <ValidationMessage For="@(()=>tarjeta.Vigencia)" />
                             </div>
                         </div>
                         <div class="col-sm-6">
                             <div class="mb-2">
                                 <label class="form-label">CVV</label>
-                                <input type="text" class="form-control form-control-sm" placeholder="###" autocomplete="off" @bind-value="tarjeta.CVV" disabled="@disabled">
+                                <input type="text" class="form-control form-control-sm" placeholder="###" autocomplete="off" 
+                                @bind-value="tarjeta.CVV" disabled="@disabled">
                                 <ValidationMessage For="@(()=>tarjeta.CVV)" />
                             </div>
                         </div>
@@ -127,14 +132,14 @@
                     </div>
                 </EditForm>
 
-               @* COMENTAR TODO ESTO*@
-@*                 <AuthorizeView>
+                @* COMENTAR TODO ESTO*@
+                <AuthorizeView>
                     <NotAuthorized>
                         <div class="alert alert-danger mt-2" role="alert">
                             Debe iniciar sesion para poder realizar la compra
                         </div>
                     </NotAuthorized>
-                </AuthorizeView> *@
+                </AuthorizeView> 
 
 
             </div>
@@ -148,16 +153,26 @@
     private decimal TotalPagar = 0;
     private TarjetaDTO tarjeta = new TarjetaDTO();
 
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         lista = await carritoServicio.DevolverCarrito();
+
+        var authState = await authenticationState;
+
+        if(authState.User.Identity.IsAuthenticated)
+            disabled = false;
+
     }
 
     private void Disminuir(int id)
     {
         CarritoDTO item = lista.First(p => p.Producto.IdProducto == id);
 
-        decimal? precioFinal = (item.Producto.PrecioOferta != 0 && item.Producto.PrecioOferta < item.Producto.Precio) ? item.Producto.PrecioOferta : item.Producto.Precio;
+        decimal? precioFinal = 
+        (item.Producto.PrecioOferta != 0 && item.Producto.PrecioOferta < item.Producto.Precio) ? item.Producto.PrecioOferta : item.Producto.Precio;
 
         if(item.Cantidad -1 > 0)
         {
@@ -171,7 +186,8 @@
 
         CarritoDTO item = lista.First(p => p.Producto.IdProducto == id);
 
-        decimal? precioFinal = (item.Producto.PrecioOferta != 0 && item.Producto.PrecioOferta < item.Producto.Precio) ? item.Producto.PrecioOferta : item.Producto.Precio;
+        decimal? precioFinal = 
+        (item.Producto.PrecioOferta != 0 && item.Producto.PrecioOferta < item.Producto.Precio) ? item.Producto.PrecioOferta : item.Producto.Precio;
 
         item.Cantidad++;
         item.Total = item.Cantidad * precioFinal;
@@ -208,9 +224,12 @@
             });
         }
 
+        var authState = await authenticationState;
+        string idUsuario = authState.User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).Select(c => c.Value).Single();
+
         VentaDTO modelo = new VentaDTO()
         {
-            IdUsuario = 1,
+            IdUsuario = Convert.ToInt32(idUsuario),
             Total = lista.Sum(t => t.Total),
             DetalleVenta = detalleVentaDTOs,
         };
