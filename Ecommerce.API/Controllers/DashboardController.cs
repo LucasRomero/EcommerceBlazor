@@ -17,7 +17,7 @@ public class DashboardController : ControllerBase
     }
 
 
-    [HttpPut("Resumen")]
+    [HttpGet("Resumen")]
     public IActionResult Resumen()
     {
         var response = new ResponseDTO<DashboardDTO>();

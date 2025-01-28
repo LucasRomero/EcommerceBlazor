@@ -123,12 +123,14 @@ public class ProductoServicio: IProductoServicio
     {
         try
         {
-            var consulta = _modeloRepositorio.Consultar(p => 
-            string.Concat(p.Nombre.ToLower()).Contains(buscar.ToLower()));
+            var consulta = _modeloRepositorio.Consultar(p =>
+            p.Nombre.ToLower().Contains(buscar.ToLower()));
 
             consulta = consulta.Include(c => c.IdCategoriaNavigation);
 
-            List<ProductoDTO> lista = _mapper.Map<List<ProductoDTO>>(await consulta.ToListAsync());
+            var productos = await consulta.ToListAsync();
+
+            List<ProductoDTO> lista = _mapper.Map<List<ProductoDTO>>(productos);
 
             return lista;
         }

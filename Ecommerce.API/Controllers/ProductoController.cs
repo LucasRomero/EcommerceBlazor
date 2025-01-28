@@ -40,7 +40,7 @@ public class ProductoController : ControllerBase
     }
 
 
-    [HttpGet("Catalogo/{categoria:alpha}/{buscar:alpha?}")]
+    [HttpGet("Catalogo/{categoria}/{buscar?}")]
     public async Task<IActionResult> Catalogo(string categoria, string buscar = "NA")
     {
         var response = new ResponseDTO<List<ProductoDTO>>();
@@ -64,7 +64,7 @@ public class ProductoController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet("Obtener{Id:int}")]
+    [HttpGet("Obtener/{Id:int}")]
     public async Task<IActionResult> Obtener(int Id)
     {
         var response = new ResponseDTO<ProductoDTO>();
