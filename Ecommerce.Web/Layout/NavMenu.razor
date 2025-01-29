@@ -19,7 +19,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
 
                 @* el usuario puede ver las rutas solo si es usuario con rol administrador *@
-                <AuthorizeView role="Administrador">
+                <AuthorizeView Roles="Administrador">
 
                     <li class="nav-item" b-test><NavLink class="nav-link" href="dashboard"> Dashboard</NavLink></li>
                     <li class="nav-item"><NavLink class="nav-link" href="usuarios"> Usuarios</NavLink></li>

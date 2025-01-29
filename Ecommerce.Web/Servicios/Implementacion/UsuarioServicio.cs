@@ -14,7 +14,7 @@ public class UsuarioServicio : IUsuarioServicio
     {
         _UsuarioHttp = http;
     }
-    public async Task<ResponseDTO<SesionDTO>> Autorizacion(UsuarioDTO modelo)
+    public async Task<ResponseDTO<SesionDTO>> Autorizacion(LoginDTO modelo)
     {
         var response = await _UsuarioHttp.PostAsJsonAsync("Usuario/Autorizacion", modelo);
         var result = await response.Content.ReadFromJsonAsync<ResponseDTO<SesionDTO>>();
