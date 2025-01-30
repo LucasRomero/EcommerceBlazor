@@ -1,0 +1,37 @@
+name: application_services
+services:
+  application_api:
+    image: application_api
+    container_name: application_api
+    build:
+      context: .
+      dockerfile: Ecommerce.API/Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - docker_sqlserver
+
+  docker_sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: docker_sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "Password123"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  web_app:
+    build:
+      context: .
+      dockerfile: Ecommerce.Web/Dockerfile
+    container_name: web_app
+    ports:
+      - "5002:80"
+    depends_on:
+      - application_api
+      - docker_sqlserver
+
+volumes:
+   sql_data: 
